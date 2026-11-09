@@ -536,11 +536,10 @@ def page_carte():
     opps = get_opportunities_for_user(st.session_state.user)
     # Seulement les lignes avec des coordonnées exploitables
     pts = opps[(opps["latitude"].notna()) & (opps["longitude"].notna())].copy()
-    # Parse défensif : parfois latitude/longitude stockées comme string ("31.62" ou " 31.62 ")
-    pts["latitude"] = pts["latitude"].astype(str).str.strip().replace("", None)
-    pts["longitude"] = pts["longitude"].astype(str).str.strip().replace("", None)
-    pts["latitude"] = pts["latitude"].astype(float, errors="coerce") if pts["latitude"].dtype != float else pts["latitude"]
-    pts["longitude"] = pts["longitude"].astype(float, errors="coerce") if pts["longitude"].dtype != float else pts["longitude"]
+    # Parse défensif : latitude/longitude parfois stockées comme string ("31.62", " 31.62 ", "", "None")
+    # pd.to_numeric(errors="coerce") = convertit en NaN si pas numérique (pas astype(errors="coerce") qui n'existe pas)
+    pts["latitude"] = pd.to_numeric(pts["latitude"], errors="coerce")
+    pts["longitude"] = pd.to_numeric(pts["longitude"], errors="coerce")
     pts = pts[(pts["latitude"].notna()) & (pts["longitude"].notna()) & (pts["latitude"].abs() > 0) & (pts["longitude"].abs() > 0)]
     # Filtres
     c1, c2 = st.columns(2)
