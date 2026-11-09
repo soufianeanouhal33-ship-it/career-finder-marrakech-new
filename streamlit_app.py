@@ -77,69 +77,56 @@ CV_RESEND_DELAY_DAYS = 7
 EXTRA_QUERIES = ["entreprise informatique", "société IT", "startup tech", "data science",
                  "développement logiciel", "cloud computing", "cybersécurité", "agence digitale"]
 
-st.set_page_config(page_title="Career Finder Marrakech", page_icon="◎", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="Career Finder Marrakech", page_icon="◎", layout="wide", initial_sidebar_state="collapsed")
 
-# ---------- Theme moderne : sombre, sobre, aucun emoji ----------
+# ---------- Theme moderne : sombre, Inter, aucun emoji ----------
 st.markdown("""
 <style>
-  /* Police propre, système */
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
   html, body, [class*="css"], .stApp, .stSidebar, .stMarkdown, .stText { font-family: 'Inter', system-ui, -apple-system, sans-serif !important; }
-
-  /* Fond sombre cohérent */
   .stApp { background: #0f172a !important; }
-  .stApp > header { background: transparent; }
-  .block-container { padding-top: 2.5rem; padding-bottom: 3rem; max-width: 1350px; }
+  .block-container { padding-top: 2.2rem; padding-bottom: 3rem; max-width: 1320px; }
 
-  /* Sidebar moderne */
-  [data-testid="stSidebar"] { background: #0b1220 !important; border-right: 1px solid #1e293b; min-width: 260px !important; }
-  [data-testid="stSidebar"] .stMarkdown p { color: #94a3b8; }
-  [data-testid="stSidebar"] [data-testid="stVerticalBlock"] { gap: 0.3rem; }
+  /* Sidebar dans le theme (ne force pas les largeurs) */
+  [data-testid="stSidebar"] { background: #0b1220 !important; border-right: 1px solid #1e293b; }
   [data-testid="stSidebar"] label[data-baseweb="radio"] > div:first-child { display: none; }
-  [data-testid="stSidebar"] .stRadio label { padding: .55rem .8rem; border-radius: 10px; margin: 0; cursor: pointer; transition: background .15s; border: 1px solid transparent; }
-  [data-testid="stSidebar"] .stRadio label:hover { background: #1e293b; }
-  [data-testid="stSidebar"] .stRadio label[aria-checked="true"] { background: #134e4a; border-color: #0d9488; color: #fff; font-weight: 600; }
+  [data-testid="stSidebar"] [data-testid="stRadio"] label { padding: .55rem .8rem; border-radius: 10px; margin: .1rem 0; cursor: pointer; transition: background .15s; border: 1px solid transparent; color: #cbd5e1; }
+  [data-testid="stSidebar"] [data-testid="stRadio"] label:hover { background: #1e293b; }
+  [data-testid="stSidebar"] [data-testid="stRadio"] label[aria-checked="true"] { background: #134e4a; border-color: #0d9488; color: #fff; font-weight: 600; }
+  [data-testid="stSidebar"] [data-testid="stSelectbox"] > div { background: #0f172a; border: 1px solid #334155; border-radius: 10px; }
 
-  /* Cards sobres, sans ombre lourde */
   .card { background: #1e293b; border: 1px solid #334155; border-radius: 14px; padding: 1.1rem; }
   div[data-testid="stVerticalBlockBorderWrapper"] { background: #1e293b !important; border: 1px solid #334155 !important; border-radius: 14px !important; }
 
-  /* Métriques */
   [data-testid="stMetric"] { background: #1e293b; border: 1px solid #334155; border-radius: 14px; padding: 1rem; }
-  [data-testid="stMetricLabel"] { color: #94a3b8; font-size: .8rem; text-transform: uppercase; letter-spacing: .04em; }
-  [data-testid="stMetricValue"] { color: #f1f5f9; font-size: 1.85rem; }
+  [data-testid="stMetricLabel"] { color: #94a3b8; font-size: .78rem; text-transform: uppercase; letter-spacing: .05em; font-weight: 600; }
+  [data-testid="stMetricValue"] { color: #f1f5f9; font-size: 1.85rem; font-weight: 800; }
 
-  /* Titres */
-  h1 { font-weight: 800; letter-spacing: -0.02em; color: #f1f5f9; font-size: 1.9rem; margin-bottom: .25rem; }
+  h1 { font-weight: 800; letter-spacing: -0.02em; color: #f1f5f9; font-size: 1.9rem; }
   h2, h3 { color: #e2e8f0; font-weight: 700; }
   .muted { color: #94a3b8; font-size: .9rem; }
   .brand { font-weight: 800; font-size: 1.25rem; color: #fff; letter-spacing: -0.02em; }
   .brand-sub { color: #64748b; font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; margin-top: 2px; }
 
-  /* Boutons */
-  .stButton > button, .stDownloadButton > button { border-radius: 10px !important; font-weight: 600 !important; }
-  .stButton > button[data-testid="baseButton-primary"] { background: #0d9488 !important; border-color: #0d9488 !important; }
+  .stButton > button, .stDownloadButton > button { border-radius: 10px !important; font-weight: 600 !important; transition: all .15s; }
+  .stButton > button[data-testid="baseButton-primary"] { background: #0d9488 !important; border-color: #0d9488 !important; color: #fff !important; }
   .stButton > button[data-testid="baseButton-primary"]:hover { background: #0f766e !important; }
 
-  /* Inputs */
-  .stTextInput input, .stTextArea textarea, .stNumberInput input, .stSelectbox div[data-baseweb="select"] > div, .stDateInput input {
+  .stTextInput input, .stTextArea textarea, .stNumberInput input, .stSelectbox div[data-baseweb="select"] > div, .stDateInput input, .stFileUploader div[data-testid="stFileUploaderDropzone"] {
     background: #0f172a !important; border: 1px solid #334155 !important; border-radius: 10px !important; color: #f1f5f9 !important;
   }
   label[data-testid="stWidgetLabel"] { color: #cbd5e1 !important; font-weight: 500; }
 
-  /* Kanban */
   .kanban-col { background: #0f172a; border: 1px solid #334155; border-radius: 14px; padding: .75rem; min-height: 220px; }
-
-  /* Tableau */
   [data-testid="stDataFrame"] { background: #1e293b; border: 1px solid #334155; border-radius: 12px; }
-
-  /* Tabs auth modernes */
-  [data-testid="stTab"] { font-weight: 600; }
+  [data-testid="stTab"] { font-weight: 600; padding: .5rem 1rem; }
   [data-testid="stTab"][aria-selected="true"] { color: #2dd4bf; }
   [data-testid="stTabHighlight"] { background: #2dd4bf; }
-
-  /* Carte */
   [data-testid="stExpander"] { background: #1e293b; border: 1px solid #334155; border-radius: 12px; }
+  [data-testid="stChatMessage"] { background: #1e293b; border: 1px solid #334155; border-radius: 14px; }
+  .stChatInputContainer { background: #0f172a; border: 1px solid #334155; border-radius: 14px; }
+  .stAlert { border-radius: 12px; }
+  .iframe-container { border-radius: 14px; overflow: hidden; border: 1px solid #334155; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -545,27 +532,49 @@ def page_offres():
 
 def page_carte():
     st.markdown("# Carte")
-    st.caption("Entreprises géolocalisées — Marrakech (OpenStreetMap). Les entreprises sans coordonnées sont ignorées.")
+    st.caption("Entreprises de Marrakech sur carte interactive. Données issues de Google Places (Collecte) ou saisies avec coordonnées.")
     opps = get_opportunities_for_user(st.session_state.user)
-    secteur = st.selectbox("Secteur", ["Tous les secteurs"] + SECTEURS, key="map_sect")
-    min_score = st.slider("Score minimum", 0, 100, 0, 5, key="map_score")
-    pts = opps[(opps["latitude"].notna()) & (opps["longitude"].notna())]
+    # Seulement les lignes avec des coordonnées exploitables
+    pts = opps[(opps["latitude"].notna()) & (opps["longitude"].notna())].copy()
+    # Parse défensif : parfois latitude/longitude stockées comme string ("31.62" ou " 31.62 ")
+    pts["latitude"] = pts["latitude"].astype(str).str.strip().replace("", None)
+    pts["longitude"] = pts["longitude"].astype(str).str.strip().replace("", None)
+    pts["latitude"] = pts["latitude"].astype(float, errors="coerce") if pts["latitude"].dtype != float else pts["latitude"]
+    pts["longitude"] = pts["longitude"].astype(float, errors="coerce") if pts["longitude"].dtype != float else pts["longitude"]
+    pts = pts[(pts["latitude"].notna()) & (pts["longitude"].notna()) & (pts["latitude"].abs() > 0) & (pts["longitude"].abs() > 0)]
+    # Filtres
+    c1, c2 = st.columns(2)
+    with c1:
+        secteur = st.selectbox("Secteur", ["Tous les secteurs"] + SECTEURS, key="map_sect")
+    with c2:
+        min_score = st.slider("Score minimum", 0, 100, 0, 5, key="map_score")
     if secteur != "Tous les secteurs":
         pts = pts[pts["secteur"] == secteur]
     pts = pts[pts["score_opportunite"] >= min_score]
-    st.markdown(f"{len(pts)} entreprise(s) affichée(s)")
+    total_in_base = len(opps)
+    total_with_coords = len(pts)
+    st.markdown(f"**{total_with_coords}** entreprise(s) affichée(s) sur {total_in_base} en base")
+    # Diagnostic explicite si carte vide
     if pts.empty:
-        opps_all = get_opportunities_for_user(st.session_state.user)
-        total = len(opps_all)
-        no_coords = total - len(opps[(opps["latitude"].notna()) & (opps["longitude"].notna())]) if total else 0
-        if total == 0:
-            st.info("Aucune entreprise en base. Ajoute-en via Collecte & Import.")
+        if total_in_base == 0:
+            st.info("Aucune entreprise en base. Ajoute-en via Collecte & Import (Google Places fournit les coordonnées).")
         else:
-            st.warning(f"{total} entreprise(s) en base, mais aucune avec des coordonnées lat/lng valides ({no_coords} sans coordonnées). Ajoute des entreprises avec latitude/longitude (Collecte Google Places ou ajout manuel).")
+            no_coords = total_in_base - len(opps[(opps["latitude"].notna()) & (opps["longitude"].notna())])
+            with st.container(border=True):
+                st.warning(f"{total_in_base} entreprise(s) en base, mais **{no_coords} sans coordonnées lat/lng** — elles ne peuvent pas s'afficher sur la carte.")
+                st.caption("Solutions : (1) Collecte Google Places — fournit automatiquement les coordonnées, (2) ajoute une entreprise manuellement avec latitude/longitude, (3) édite une fiche pour renseigner les coordonnées via Collecte & Import → Ajouter une entreprise.")
+                # Liste des entreprises sans coords (aide à l'édition)
+                sans = opps[opps["latitude"].isna() | opps["longitude"].isna()][["nom", "secteur", "adresse"]].head(20)
+                if not sans.empty:
+                    st.markdown("**Entreprises sans coordonnées (exemples) :**")
+                    st.dataframe(sans, use_container_width=True, hide_index=True)
         return
-    # Carte sombre (CartoDB dark) pour matcher le thème
-    m = folium.Map(location=[31.6295, -7.9811], zoom_start=12, tiles="CartoDB.dark_matter", attr="© OpenStreetMap, © CARTO")
-    folium.CircleMarker(location=[31.6295, -7.9811], radius=5000, color="#0d9488", fill=True, fill_color="#0d9488", fill_opacity=0.06, tooltip="Marrakech").add_to(m)
+    # Carte : fond sombre + cluster léger (pas de dépendance MarkerCluster lourde)
+    # Centre dynamique sur les points
+    center_lat, center_lng = float(pts["latitude"].mean()), float(pts["longitude"].mean())
+    zoom = 12 if len(pts) < 50 else 11
+    m = folium.Map(location=[center_lat, center_lng], zoom_start=zoom, tiles="CartoDB.dark_matter", attr="© OpenStreetMap contributors, © CARTO")
+    folium.CircleMarker(location=[31.6295, -7.9811], radius=5000, color="#0d9488", fill=True, fill_color="#0d9488", fill_opacity=0.05, tooltip="Marrakech").add_to(m)
     for _, o in pts.iterrows():
         site = str(o.get("site_web") or "")
         popup = f"<b>{o['nom']}</b><br>{o['secteur']} · score {o['score_opportunite']}<br>{o.get('adresse') or ''}"
@@ -574,7 +583,8 @@ def page_carte():
         if site.startswith("http"):
             popup += f"<br><a href='{site}' target='_blank'>Site web</a>"
         folium.Marker(location=[float(o["latitude"]), float(o["longitude"])], popup=popup, tooltip=str(o["nom"])).add_to(m)
-    st_folium(m, width="100%", height=560, returned_objects=[])
+    st_folium(m, width="100%", height=620, returned_objects=[], use_container_width=True)
+    st.caption(f"{len(pts)} points sur la carte. Cliquez sur un point pour les détails.")
 
 def page_candidatures():
     st.markdown("# Suivi des candidatures")
@@ -658,24 +668,53 @@ def _pie_fig(df):
 
 def page_statistiques():
     st.markdown("# Statistiques")
-    st.markdown("Analyse des entreprises, des offres et de ta recherche.")
+    st.caption("Analyse des entreprises, des offres et de ta recherche.")
     s = get_stats()
-    cols = st.columns(6)
-    for c, (icon, key, label) in zip(cols, [("🏢", "total_opportunites", "Entreprises"), ("📄", "total_offres", "Offres"),
-                                            ("🏷️", "total_secteurs", "Secteurs"), ("✉️", "entreprises_avec_email", "Avec e-mail"),
-                                            ("📨", "cv_envoyes", "CV envoyés"), ("⭐", "favoris", "Favoris")]):
-        c.metric(icon, s[key], label)
+    c1, c2, c3, c4, c5, c6 = st.columns(6)
+    for c, (key, label) in zip([c1, c2, c3, c4, c5, c6], [("total_opportunites", "Entreprises"), ("total_offres", "Offres"),
+                                            ("total_secteurs", "Secteurs"), ("entreprises_avec_email", "Avec e-mail"),
+                                            ("cv_envoyes", "CV envoyés"), ("favoris", "Favoris")]):
+        c.metric(label, s[key])
     c1, c2 = st.columns(2)
     with c1:
-        _chart_from_dict("Entreprises par secteur", dict(sorted(s["par_secteur"].items(), key=lambda x: -x[1])))
-        _chart_from_dict("Offres par type de stage", s["offres_par_type_stage"], "pie")
-        _chart_from_dict("Présence numérique des entreprises",
-                         {"Avec e-mail": s["presence_numerique"]["avec_email"], "Sans e-mail": s["presence_numerique"]["sans_email"],
-                          "Avec site web": s["presence_numerique"]["avec_site_web"], "Sans site web": s["presence_numerique"]["sans_site_web"]})
+        with st.container(border=True):
+            st.markdown("#### Entreprises par secteur")
+            data = dict(sorted(s["par_secteur"].items(), key=lambda x: -x[1]))
+            if data:
+                df = pd.DataFrame({"catégorie": list(data.keys()), "valeur": list(data.values())})
+                st.bar_chart(df.set_index("catégorie"), color="#0d9488")
+            else:
+                st.caption("Pas encore de données.")
+            st.caption(f"Total secteurs : {s['total_secteurs']} · Score moyen : {s['score_moyen']}")
+        with st.container(border=True):
+            st.markdown("#### Offres par type de stage")
+            data = s["offres_par_type_stage"]
+            if data:
+                df = pd.DataFrame({"catégorie": list(data.keys()), "valeur": list(data.values())})
+                st.pyplot(_pie_fig(df))
+            else:
+                st.caption("Pas encore de données.")
+        with st.container(border=True):
+            st.markdown("#### Présence numérique des entreprises")
+            data = {"Avec e-mail": s["presence_numerique"]["avec_email"], "Sans e-mail": s["presence_numerique"]["sans_email"],
+                    "Avec site web": s["presence_numerique"]["avec_site_web"], "Sans site web": s["presence_numerique"]["sans_site_web"]}
+            df = pd.DataFrame({"catégorie": list(data.keys()), "valeur": list(data.values())})
+            st.bar_chart(df.set_index("catégorie"), color="#6366f1")
     with c2:
-        _chart_from_dict("Offres par type de contrat", s["offres_par_contrat"])
-        statuts = {k: s["candidatures_par_statut"].get(k, 0) for k in STATUTS}
-        _chart_from_dict("Candidatures par statut", statuts)
+        with st.container(border=True):
+            st.markdown("#### Offres par type de contrat")
+            data = s["offres_par_contrat"]
+            if data:
+                df = pd.DataFrame({"catégorie": list(data.keys()), "valeur": list(data.values())})
+                st.bar_chart(df.set_index("catégorie"), color="#0ea5e9")
+            else:
+                st.caption("Pas encore de données.")
+        with st.container(border=True):
+            st.markdown("#### Candidatures par statut")
+            statuts = {k: s["candidatures_par_statut"].get(k, 0) for k in STATUTS}
+            df = pd.DataFrame({"catégorie": list(statuts.keys()), "valeur": list(statuts.values())})
+            st.bar_chart(df.set_index("catégorie"), color="#f59e0b")
+            st.caption(f"Total candidatures suivies : {s['total_candidatures']}")
 
 def page_profil():
     st.markdown("# Profil & Matching")
@@ -894,34 +933,112 @@ def page_donnees():
         opps.to_csv(csv, index=False)
         st.download_button("Entreprises (.csv)", csv.getvalue(), file_name="opportunites.csv", mime="text/csv")
 
-# ---------- Navigation ----------
+def page_assistant():
+    """Chatbot d'aide sobre : FAQ règles + conseils, sans LLM externe."""
+    st.markdown("# Assistant")
+    st.caption("Aide intégrée — réponses basées sur les données de ton compte. Aucune IA externe, 100% local.")
+    if "chat" not in st.session_state or not isinstance(st.session_state.chat, list):
+        st.session_state.chat = []
+    # Historique
+    for msg in st.session_state.chat:
+        with st.chat_message(msg["role"]):
+            st.markdown(msg["content"])
+    # Suggestions rapides
+    c1, c2, c3, c4 = st.columns(4)
+    qs = ["Comment envoyer mon CV ?", "Comment ajouter une entreprise sur la carte ?", "Comment improve mon matching ?", "Comment exporter mes données ?"]
+    for col, q in zip([c1, c2, c3, c4], qs):
+        if col.button(q, use_container_width=True, key=f"q_{q}"):
+            st.session_state.chat.append({"role": "user", "content": q})
+            st.session_state.chat.append({"role": "assistant", "content": answer_faq(q)})
+            st.rerun()
+    prompt = st.chat_input("Pose ta question…")
+    if prompt:
+        st.session_state.chat.append({"role": "user", "content": prompt})
+        st.session_state.chat.append({"role": "assistant", "content": answer_faq(prompt)})
+        st.rerun()
+    if st.session_state.chat and st.button("Effacer la conversation"):
+        st.session_state.chat = []
+        st.rerun()
+
+def answer_faq(q: str) -> str:
+    q = (q or "").lower()
+    if "cv" in q or "envoyer" in q or "email" in q or "e-mail" in q:
+        return ("**Envoyer ton CV :**\n\n"
+                "1. Va dans **Entreprises** → clique **CV** sur l'entreprise qui a un e-mail.\n"
+                "2. Choisis ton PDF (5 Mo max), relis l'objet/message, clique **Envoyer**.\n"
+                "3. Sans SMTP configuré : utilise **Ouvrir dans ma messagerie** et joins ton PDF manuellement.\n"
+                "Limites : 10 envois/heure, 30/jour. Chaque envoi crée automatiquement une candidature « Envoyée ».")
+    if "carte" in q or "map" in q or "coord" in q or "latitude" in q:
+        return ("**Carte vide :**\n\n"
+                "La carte n'affiche que les entreprises **avec coordonnées lat/lng**.\n"
+                "Solutions : **Collecte Google Places** (fournit automatiquement les coordonnées) ou ajout manuel avec latitude/longitude.\n"
+                "Dans Entreprises, les fiches sans coordonnées sont ignorées sur la carte (voir section Carte pour la liste).")
+    if "match" in q or "compet" in q or "profil" in q or "score" in q:
+        return ("**Profil & Matching :**\n\n"
+                "Renseigne tes compétences (séparées par des virgules, ex: `python, data, cloud`).\n"
+                "Le matching calcule : **60%** recoupement mots-clés profil ↔ entreprise + **40%** score d'opportunité.\n"
+                "Plus tes compétences couvrent les mots-clés des entreprises, plus le match monte.")
+    if "export" in q or "excel" in q or "csv" in q or "sauveg" in q:
+        return ("**Exports :**\n\n"
+                "Va dans **Collecte & Import → Exports** :\n"
+                "- *Export complet* : opportunités + candidatures + résumé chiffré (Excel)\n"
+                "- *Avant / après nettoyage* : tes dernières collectes (si disponibles)\n"
+                "- *Entreprises (CSV)* : catalogue brut")
+    if "offre" in q or "stage" in q:
+        return ("**Offres :**\n\n"
+                "Page **Offres** : filtres par type de stage et contrat, ajout manuel ou import Excel/CSV.\n"
+                "Colonne titre obligatoire (`titre`, `intitulé` ou `poste`). Import Excel : colonnes reconnues automatiquement.")
+    if "candidat" in q or "suivi" in q or "kanban" in q:
+        return ("**Candidatures (Kanban) :**\n\n"
+                "Page **Candidatures** : ajoute une candidature (entreprise, poste, date, statut, remarque).\n"
+                "Change le statut via le menu déroulant sur chaque carte : À contacter → Envoyée → Entretien → Offre reçue / Refusée.")
+    if "collecte" in q or "import" in q or "google" in q:
+        return ("**Collecte & Import :**\n\n"
+                "- *Google Places* : récupère des entreprises IA/IT à Marrakech (clé API Google requise).\n"
+                "- *Excel entreprises* : colonne `entreprise` obligatoire, `email` pour l'envoi CV.\n"
+                "- *Excel/CSV offres* : `titre` obligatoire.\n"
+                "- *Ajout manuel* : avec ou sans coordonnées.")
+    # Réponse par défaut contextuelle
+    opps = get_opportunities_for_user(st.session_state.user) if st.session_state.user else None
+    stats = get_stats() if st.session_state.user else {}
+    if stats:
+        return (f"Tu as **{stats.get('total_opportunites', 0)} entreprise(s)**, **{stats.get('total_offres', 0)} offre(s)**, "
+                f"**{stats.get('total_candidatures', 0)} candidature(s)** suivie(s). "
+                f"Score moyen des entreprises : **{stats.get('score_moyen', 0)}**.\n\n"
+                "Pose-moi une question sur : envoi CV, carte, matching, export, offres, candidatures, ou collecte. Je réponds instantanément.")
+    return "Je suis l'assistant intégré. Pose-moi une question sur les CV, la carte, le matching, les exports, les offres ou les candidatures."
+
+# ---------- Navigation : onglets modernes (plus de sélecteur) ----------
 if not st.session_state.user:
     show_auth()
 else:
-    with st.sidebar:
-        st.markdown('<div class="brand">Career Finder</div><div class="brand-sub">Marrakech · IA &amp; IT</div>', unsafe_allow_html=True)
-        st.markdown(f"**{st.session_state.user}** " + ("· admin" if st.session_state.is_admin else ""))
-        nav = st.selectbox("Navigation", ["Accueil", "Entreprises", "Offres", "Carte", "Candidatures",
-                                      "Statistiques", "Profil & Matching", "Collecte & Import"],
-                       key="nav")
-        if st.button("Se déconnecter", use_container_width=True):
+    # Header barre
+    col_h1, col_h2 = st.columns([4, 1])
+    with col_h1:
+        st.markdown('<div class="brand">Career Finder</div><div class="brand-sub">Marrakech · IA &amp; IT — Streamlit</div>', unsafe_allow_html=True)
+    with col_h2:
+        st.markdown(f"**{st.session_state.user}**" + (" · admin" if st.session_state.is_admin else ""))
+        if st.button("Déconnexion", use_container_width=True, key="logout_top"):
             st.session_state.user = None
             st.session_state.is_admin = False
             st.rerun()
-    page = nav
-    if page == "Accueil":
+    st.markdown("---")
+    tabs = st.tabs(["Accueil", "Entreprises", "Offres", "Carte", "Candidatures", "Statistiques", "Profil & Matching", "Collecte & Import", "Assistant"])
+    with tabs[0]:
         page_accueil()
-    elif page == "Entreprises":
+    with tabs[1]:
         page_entreprises()
-    elif page == "Offres":
+    with tabs[2]:
         page_offres()
-    elif page == "Carte":
+    with tabs[3]:
         page_carte()
-    elif page == "Candidatures":
+    with tabs[4]:
         page_candidatures()
-    elif page == "Statistiques":
+    with tabs[5]:
         page_statistiques()
-    elif page == "Profil & Matching":
+    with tabs[6]:
         page_profil()
-    elif page == "Collecte & Import":
+    with tabs[7]:
         page_donnees()
+    with tabs[8]:
+        page_assistant()
