@@ -77,17 +77,69 @@ CV_RESEND_DELAY_DAYS = 7
 EXTRA_QUERIES = ["entreprise informatique", "société IT", "startup tech", "data science",
                  "développement logiciel", "cloud computing", "cybersécurité", "agence digitale"]
 
-st.set_page_config(page_title="Career Finder Marrakech", page_icon="🎯", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="Career Finder Marrakech", page_icon="◎", layout="wide", initial_sidebar_state="expanded")
 
+# ---------- Theme moderne : sombre, sobre, aucun emoji ----------
 st.markdown("""
 <style>
-  .stApp { background: #f4f6f8; }
-  .brand { font-weight: 800; font-size: 1.3rem; color: #0f172a; }
-  .muted { color: #64748b; font-size: .9rem; }
-  .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.1rem; box-shadow: 0 1px 3px rgba(15,23,42,.08); }
-  .chip { display: inline-block; padding: .1rem .55rem; border-radius: 999px; font-size: .75rem; font-weight: 600; background: #ccfbf1; color: #0f766e; }
-  .kanban-col { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: .75rem; min-height: 200px; }
-  .kcard { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: .65rem; margin-top: .6rem; }
+  /* Police propre, système */
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+  html, body, [class*="css"], .stApp, .stSidebar, .stMarkdown, .stText { font-family: 'Inter', system-ui, -apple-system, sans-serif !important; }
+
+  /* Fond sombre cohérent */
+  .stApp { background: #0f172a !important; }
+  .stApp > header { background: transparent; }
+  .block-container { padding-top: 2.5rem; padding-bottom: 3rem; max-width: 1350px; }
+
+  /* Sidebar moderne */
+  [data-testid="stSidebar"] { background: #0b1220 !important; border-right: 1px solid #1e293b; min-width: 260px !important; }
+  [data-testid="stSidebar"] .stMarkdown p { color: #94a3b8; }
+  [data-testid="stSidebar"] [data-testid="stVerticalBlock"] { gap: 0.3rem; }
+  [data-testid="stSidebar"] label[data-baseweb="radio"] > div:first-child { display: none; }
+  [data-testid="stSidebar"] .stRadio label { padding: .55rem .8rem; border-radius: 10px; margin: 0; cursor: pointer; transition: background .15s; border: 1px solid transparent; }
+  [data-testid="stSidebar"] .stRadio label:hover { background: #1e293b; }
+  [data-testid="stSidebar"] .stRadio label[aria-checked="true"] { background: #134e4a; border-color: #0d9488; color: #fff; font-weight: 600; }
+
+  /* Cards sobres, sans ombre lourde */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 14px; padding: 1.1rem; }
+  div[data-testid="stVerticalBlockBorderWrapper"] { background: #1e293b !important; border: 1px solid #334155 !important; border-radius: 14px !important; }
+
+  /* Métriques */
+  [data-testid="stMetric"] { background: #1e293b; border: 1px solid #334155; border-radius: 14px; padding: 1rem; }
+  [data-testid="stMetricLabel"] { color: #94a3b8; font-size: .8rem; text-transform: uppercase; letter-spacing: .04em; }
+  [data-testid="stMetricValue"] { color: #f1f5f9; font-size: 1.85rem; }
+
+  /* Titres */
+  h1 { font-weight: 800; letter-spacing: -0.02em; color: #f1f5f9; font-size: 1.9rem; margin-bottom: .25rem; }
+  h2, h3 { color: #e2e8f0; font-weight: 700; }
+  .muted { color: #94a3b8; font-size: .9rem; }
+  .brand { font-weight: 800; font-size: 1.25rem; color: #fff; letter-spacing: -0.02em; }
+  .brand-sub { color: #64748b; font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; margin-top: 2px; }
+
+  /* Boutons */
+  .stButton > button, .stDownloadButton > button { border-radius: 10px !important; font-weight: 600 !important; }
+  .stButton > button[data-testid="baseButton-primary"] { background: #0d9488 !important; border-color: #0d9488 !important; }
+  .stButton > button[data-testid="baseButton-primary"]:hover { background: #0f766e !important; }
+
+  /* Inputs */
+  .stTextInput input, .stTextArea textarea, .stNumberInput input, .stSelectbox div[data-baseweb="select"] > div, .stDateInput input {
+    background: #0f172a !important; border: 1px solid #334155 !important; border-radius: 10px !important; color: #f1f5f9 !important;
+  }
+  label[data-testid="stWidgetLabel"] { color: #cbd5e1 !important; font-weight: 500; }
+
+  /* Kanban */
+  .kanban-col { background: #0f172a; border: 1px solid #334155; border-radius: 14px; padding: .75rem; min-height: 220px; }
+
+  /* Tableau */
+  [data-testid="stDataFrame"] { background: #1e293b; border: 1px solid #334155; border-radius: 12px; }
+
+  /* Tabs auth modernes */
+  [data-testid="stTab"] { font-weight: 600; }
+  [data-testid="stTab"][aria-selected="true"] { color: #2dd4bf; }
+  [data-testid="stTabHighlight"] { background: #2dd4bf; }
+
+  /* Carte */
+  [data-testid="stExpander"] { background: #1e293b; border: 1px solid #334155; border-radius: 12px; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -133,8 +185,9 @@ def error_text(e) -> str:
 
 # ---------- Auth ----------
 def show_auth():
-    st.markdown("# 🎯 Career Finder")
-    st.markdown('<p class="muted">Entreprises, offres et candidatures IA &amp; IT à Marrakech.</p>', unsafe_allow_html=True)
+    st.markdown("# Career Finder Marrakech")
+    st.markdown('<p class="muted">Plateforme de recherche d\'entreprises IA &amp; IT, offres de stage et suivi de candidatures.</p>', unsafe_allow_html=True)
+    st.markdown("---")
     tab_login, tab_register = st.tabs(["Connexion", "Créer un compte"])
     with tab_login:
         with st.form("login_form"):
@@ -228,9 +281,9 @@ def _df_to_xlsx(sheets: dict) -> bytes:
     return buf.getvalue()
 
 def send_cv_dialog(opp, subject="Candidature pour un stage"):
-    """Modale d'envoi de CV — même logique que POST /api/send-cv."""
+    """Modale d'envoi de CV."""
     smtp = smtp_configured()
-    st.markdown(f"### ✉️ Envoyer mon CV — {opp['nom']}")
+    st.markdown(f"### Envoyer mon CV — {opp['nom']}")
     st.caption(f"{opp['secteur']} · Destinataire : {opp['email']}")
     if not smtp:
         st.warning("L'envoi automatique n'est pas configuré sur ce serveur (SMTP). Tu peux ouvrir ce message dans ta messagerie et joindre ton CV toi-même.")
@@ -243,11 +296,11 @@ def send_cv_dialog(opp, subject="Candidature pour un stage"):
         with col_mailto:
             mailto = st.form_submit_button("Ouvrir dans ma messagerie", use_container_width=True, type="secondary")
         with col_send:
-            send = st.form_submit_button("📤 Envoyer", use_container_width=True, type="primary", disabled=not smtp)
+            send = st.form_submit_button("Envoyer", use_container_width=True, type="primary", disabled=not smtp)
     if mailto:
         import urllib.parse
         href = f"mailto:{opp['email']}?subject={urllib.parse.quote(subj)}&body={urllib.parse.quote(message)}"
-        st.link_button("📧 Depuis ta messagerie", href, use_container_width=True)
+        st.link_button("Ouvrir dans ma messagerie", href, use_container_width=True)
         st.caption("Attache ton CV PDF manuellement dans le mail ouvert.")
     if send:
         if not subj.strip() or not message.strip():
@@ -296,27 +349,27 @@ def send_cv_dialog(opp, subject="Candidature pour un stage"):
         conn.close()
         if reply_to:
             st.session_state.reply_to = reply_to
-        st.success(f"CV envoyé à {opp['nom']} ✅")
+        st.success(f"CV envoyé à {opp['nom']}")
         st.rerun()
 
 # ---------- Pages ----------
 def page_accueil():
-    st.markdown(f"# Bonjour {st.session_state.user} 👋")
-    st.markdown("Retrouve les entreprises, les offres et le suivi de tes candidatures à Marrakech.")
+    st.markdown(f"Bonjour, {st.session_state.user}")
+    st.caption("Retrouve les entreprises, les offres et le suivi de tes candidatures à Marrakech.")
     stats = get_stats()
     opps_df = get_opportunities_for_user(st.session_state.user)
     offers_df = list_offers()
     if opps_df.empty:
         st.info("Aucune donnée pour l'instant. Va dans **Collecte & Import** pour récupérer des entreprises (Google Places ou Excel).")
     cols = st.columns(6)
-    for c, (icon, key, label) in zip(cols, [("🏢", "total_opportunites", "Entreprises"), ("📄", "total_offres", "Offres"),
-                                            ("🏷️", "total_secteurs", "Secteurs"), ("✉️", "entreprises_avec_email", "Avec e-mail"),
-                                            ("📨", "cv_envoyes", "CV envoyés"), ("📬", "total_candidatures", "Candidatures")]):
-        c.metric(icon, stats[key], label)
+    for c, (icon, key, label) in zip(cols, [("", "total_opportunites", "Entreprises"), ("", "total_offres", "Offres"),
+                                            ("", "total_secteurs", "Secteurs"), ("", "entreprises_avec_email", "Avec e-mail"),
+                                            ("", "cv_envoyes", "CV envoyés"), ("", "total_candidatures", "Candidatures")]):
+        c.metric(label, stats[key])
     top = opps_df.sort_values("score_opportunite", ascending=False).head(6) if not opps_df.empty else pd.DataFrame()
     c1, c2 = st.columns(2)
     with c1:
-        st.subheader("🏆 Meilleures opportunités")
+        st.subheader("Meilleures opportunités")
         if not top.empty:
             for _, o in top.iterrows():
                 with st.container(border=True):
@@ -327,7 +380,7 @@ def page_accueil():
         else:
             st.markdown("—")
     with c2:
-        st.subheader("🆕 Dernières offres")
+        st.subheader("Dernières offres")
         if not offers_df.empty:
             for _, f in offers_df.head(6).iterrows():
                 with st.container(border=True):
@@ -337,10 +390,10 @@ def page_accueil():
             st.markdown("Aucune offre. Ajoute-en ou importe un fichier depuis **Collecte & Import**.")
 
 def page_entreprises():
-    st.markdown("# 🏢 Entreprises")
-    st.markdown("Entreprises IA & IT de Marrakech, classées par score d'opportunité.")
+    st.markdown("# Entreprises")
+    st.caption("Entreprises IA & IT de Marrakech, classées par score d'opportunité.")
     opps = get_opportunities_for_user(st.session_state.user)
-    q = st.text_input("🔎 Recherche (nom ou adresse)", key="ent_q", placeholder="Nom ou adresse…")
+    q = st.text_input("Recherche (nom ou adresse)", key="ent_q", placeholder="Nom ou adresse…")
     secteur = st.selectbox("Secteur", ["Tous les secteurs"] + SECTEURS, key="ent_sect")
     min_score = st.slider("Score minimum", 0, 100, 0, 5, key="ent_score")
     email_only = st.checkbox("Avec e-mail", key="ent_email")
@@ -381,13 +434,13 @@ def page_entreprises():
         with st.container(border=True):
             c1, c2, c3, c4, c5, c6 = st.columns([3, 1, 1, 1, 1, 1])
             c1.write(f"**{o['nom']}** — {o['secteur']} · Score {o['score_opportunite']}")
-            if c2.button("★ Favori", key=f"fav_{o['id']}", use_container_width=True):
+            if c2.button("Favori", key=f"fav_{o['id']}", use_container_width=True):
                 toggle_favorite(st.session_state.user, int(o["id"]))
                 st.rerun()
             email = (o.get("email") or "").strip()
-            if c3.button("✉️ CV", key=f"cv_{o['id']}", use_container_width=True, disabled=not email):
+            if c3.button("CV", key=f"cv_{o['id']}", use_container_width=True, disabled=not email):
                 send_cv_dialog(o)
-            if c4.button("📋 Suivre", key=f"track_{o['id']}", use_container_width=True):
+            if c4.button("Suivre", key=f"track_{o['id']}", use_container_width=True):
                 with st.form(f"track_{o['id']}"):
                     poste = st.text_input("Poste visé", value="Stage")
                     statut = st.selectbox("Statut", STATUTS, index=STATUTS.index("À contacter"))
@@ -400,10 +453,10 @@ def page_entreprises():
                                      (st.session_state.user, o["nom"], poste, statut, d.isoformat(), remarque, int(o["id"])))
                         conn.commit()
                         conn.close()
-                        st.success("Candidature ajoutée au suivi ✅")
+                        st.success("Candidature ajoutée au suivi")
                         st.rerun()
             if can_edit(o.get("added_by", "")):
-                if c5.button("✏️", key=f"edit_{o['id']}", use_container_width=True):
+                if c5.button("Éditer", key=f"edit_{o['id']}", use_container_width=True):
                     with st.form(f"edit_{o['id']}"):
                         em = st.text_input("E-mail de contact", value=o.get("email", ""))
                         tel = st.text_input("Téléphone", value=o.get("telephone", ""))
@@ -415,9 +468,9 @@ def page_entreprises():
                                 st.error("Adresse e-mail invalide")
                             else:
                                 update_opportunity_fields(int(o["id"]), {"email": em.strip().lower(), "telephone": tel, "site_web": site, "adresse": adr, "secteur": sec})
-                                st.success("Entreprise mise à jour ✅")
+                                st.success("Entreprise mise à jour")
                                 st.rerun()
-                if c6.button("🗑", key=f"del_{o['id']}", use_container_width=True):
+                if c6.button("Supprimer", key=f"del_{o['id']}", use_container_width=True):
                     if st.session_state.get(f"confirm_del_{o['id']}"):
                         delete_opportunity(int(o["id"]))
                         st.success("Entreprise supprimée")
@@ -428,16 +481,16 @@ def page_entreprises():
                         st.rerun()
 
 def page_offres():
-    st.markdown("# 📄 Offres de stage et d'emploi")
-    st.markdown("Opportunités professionnelles à Marrakech.")
+    st.markdown("# Offres de stage et d'emploi")
+    st.caption("Opportunités professionnelles à Marrakech.")
     opps_df = get_opportunities_for_user(st.session_state.user)
-    q = st.text_input("🔎 Recherche (titre, entreprise…)", key="off_q")
+    q = st.text_input("Recherche (titre, entreprise…)", key="off_q")
     type_stage = st.selectbox("Type de stage", [""] + TYPES_STAGE, index=0, format_func=lambda v: v or "Tous les types")
     contrat = st.selectbox("Contrat", [""] + CONTRATS, index=0, format_func=lambda v: v or "Tous les contrats")
     offers = list_offers(q.strip(), contrat, type_stage, None).to_dict(orient="records")
     st.markdown(f"{len(offers)} offre(s) trouvée(s)")
 
-    with st.expander("➕ Ajouter une offre"):
+    with st.expander("Ajouter une offre"):
         with st.form("add_offer"):
             titre = st.text_input("Titre *", max_chars=200)
             entreprise = st.text_input("Entreprise", help="Choisis ou saisis un nom")
@@ -460,7 +513,7 @@ def page_offres():
                                       "contrat": c_contrat, "type_stage": c_type, "ville": ville,
                                       "date_publication": date_pub.isoformat(), "url": url, "description": description},
                                      added_by=st.session_state.user)
-                        st.success("Offre ajoutée ✅")
+                        st.success("Offre ajoutée")
                         st.rerun()
                     except ValueError as e:
                         st.error(str(e))
@@ -470,18 +523,18 @@ def page_offres():
     for f in offers:
         with st.container(border=True):
             st.markdown(f"### {f['titre']}")
-            st.caption(f"🏢 {f['entreprise'] or 'Non renseignée'} · 📋 {f['contrat']} · 🎓 {f['type_stage']} · 📍 {f['ville'] or '—'} · 📅 {fmt_day(f['date_publication']) or '—'}")
+            st.caption(f"{f['entreprise'] or 'Non renseignée'} · {f['contrat']} · {f['type_stage']} · {f['ville'] or '—'} · {fmt_day(f['date_publication']) or '—'}")
             if f.get("description"):
                 st.markdown(f['description'][:400])
             a1, a2, a3 = st.columns([1, 1, 1])
             if (f.get("url") or "").strip():
-                a1.link_button("🔗 Voir l'offre", f["url"], use_container_width=True)
+                a1.link_button("Voir l'offre", f["url"], use_container_width=True)
             company = opps_df[opps_df["id"] == f.get("opportunity_id")] if f.get("opportunity_id") else pd.DataFrame()
             if not company.empty and (company.iloc[0].get("email") or "").strip():
-                if a2.button("✉️ Envoyer mon CV", key=f"offcv_{f['id']}", use_container_width=True):
+                if a2.button("Envoyer mon CV", key=f"offcv_{f['id']}", use_container_width=True):
                     send_cv_dialog(company.iloc[0].to_dict(), subject=f"Candidature : {f['titre']}")
             if can_edit(f.get("added_by", "")):
-                if a3.button("🗑 Supprimer", key=f"deloff_{f['id']}", use_container_width=True):
+                if a3.button("Supprimer", key=f"deloff_{f['id']}", use_container_width=True):
                     if st.session_state.get(f"confirm_off_{f['id']}"):
                         delete_offer(int(f["id"]))
                         st.success("Offre supprimée")
@@ -491,8 +544,8 @@ def page_offres():
                         st.warning("Clique à nouveau pour confirmer")
 
 def page_carte():
-    st.markdown("# 🗺️ Carte")
-    st.markdown("Localisation des entreprises collectées.")
+    st.markdown("# Carte")
+    st.caption("Entreprises géolocalisées — Marrakech (OpenStreetMap). Les entreprises sans coordonnées sont ignorées.")
     opps = get_opportunities_for_user(st.session_state.user)
     secteur = st.selectbox("Secteur", ["Tous les secteurs"] + SECTEURS, key="map_sect")
     min_score = st.slider("Score minimum", 0, 100, 0, 5, key="map_score")
@@ -502,35 +555,43 @@ def page_carte():
     pts = pts[pts["score_opportunite"] >= min_score]
     st.markdown(f"{len(pts)} entreprise(s) affichée(s)")
     if pts.empty:
-        st.info("Aucune entreprise géolocalisée avec ces filtres.")
+        opps_all = get_opportunities_for_user(st.session_state.user)
+        total = len(opps_all)
+        no_coords = total - len(opps[(opps["latitude"].notna()) & (opps["longitude"].notna())]) if total else 0
+        if total == 0:
+            st.info("Aucune entreprise en base. Ajoute-en via Collecte & Import.")
+        else:
+            st.warning(f"{total} entreprise(s) en base, mais aucune avec des coordonnées lat/lng valides ({no_coords} sans coordonnées). Ajoute des entreprises avec latitude/longitude (Collecte Google Places ou ajout manuel).")
         return
-    m = folium.Map(location=[31.6295, -7.9811], zoom_start=12)
+    # Carte sombre (CartoDB dark) pour matcher le thème
+    m = folium.Map(location=[31.6295, -7.9811], zoom_start=12, tiles="CartoDB.dark_matter", attr="© OpenStreetMap, © CARTO")
+    folium.CircleMarker(location=[31.6295, -7.9811], radius=5000, color="#0d9488", fill=True, fill_color="#0d9488", fill_opacity=0.06, tooltip="Marrakech").add_to(m)
     for _, o in pts.iterrows():
         site = str(o.get("site_web") or "")
         popup = f"<b>{o['nom']}</b><br>{o['secteur']} · score {o['score_opportunite']}<br>{o.get('adresse') or ''}"
         if o.get("email"):
-            popup += f"<br>✉️ {o['email']}"
+            popup += f"<br>{o['email']}"
         if site.startswith("http"):
             popup += f"<br><a href='{site}' target='_blank'>Site web</a>"
         folium.Marker(location=[float(o["latitude"]), float(o["longitude"])], popup=popup, tooltip=str(o["nom"])).add_to(m)
-    st_folium(m, width="100%", height=560)
+    st_folium(m, width="100%", height=560, returned_objects=[])
 
 def page_candidatures():
-    st.markdown("# 📬 Suivi des candidatures")
+    st.markdown("# Suivi des candidatures")
     st.markdown("Ajoute et suis tes candidatures auprès des entreprises.")
     opps = get_opportunities_for_user(st.session_state.user)
     conn = get_connection()
     apps = pd.read_sql_query("SELECT * FROM applications WHERE user=? ORDER BY date_ajout DESC", conn, params=(st.session_state.user,))
     conn.close()
 
-    with st.expander("➕ Ajouter une candidature", expanded=len(apps) == 0):
+    with st.expander("Ajouter une candidature", expanded=len(apps) == 0):
         with st.form("add_app"):
             company = st.text_input("Entreprise *", max_chars=200, placeholder="Nom de l'entreprise")
             poste = st.text_input("Poste *", value="Stage")
             d = st.date_input("Date", value=date.today())
             statut = st.selectbox("Statut", STATUTS, index=STATUTS.index("À contacter"))
             remarque = st.text_area("Commentaire", placeholder="Ex : CV envoyé par e-mail…", height=80)
-            if st.form_submit_button("💾 Enregistrer la candidature", type="primary"):
+            if st.form_submit_button("Enregistrer la candidature", type="primary"):
                 if not company.strip() or not poste.strip():
                     st.error("Entreprise et poste obligatoires")
                 else:
@@ -564,7 +625,7 @@ def page_candidatures():
                         conn.commit()
                         conn.close()
                         st.rerun()
-                    if st.button("🗑 Supprimer", key=f"delapp_{a['id']}"):
+                    if st.button("Supprimer", key=f"delapp_{a['id']}"):
                         conn = get_connection()
                         conn.execute("DELETE FROM applications WHERE id=?", (int(a["id"]),))
                         conn.commit()
@@ -596,7 +657,7 @@ def _pie_fig(df):
     return fig
 
 def page_statistiques():
-    st.markdown("# 📊 Statistiques")
+    st.markdown("# Statistiques")
     st.markdown("Analyse des entreprises, des offres et de ta recherche.")
     s = get_stats()
     cols = st.columns(6)
@@ -606,18 +667,18 @@ def page_statistiques():
         c.metric(icon, s[key], label)
     c1, c2 = st.columns(2)
     with c1:
-        _chart_from_dict("🏢 Entreprises par secteur", dict(sorted(s["par_secteur"].items(), key=lambda x: -x[1])))
-        _chart_from_dict("🎓 Offres par type de stage", s["offres_par_type_stage"], "pie")
-        _chart_from_dict("🌐 Présence numérique des entreprises",
+        _chart_from_dict("Entreprises par secteur", dict(sorted(s["par_secteur"].items(), key=lambda x: -x[1])))
+        _chart_from_dict("Offres par type de stage", s["offres_par_type_stage"], "pie")
+        _chart_from_dict("Présence numérique des entreprises",
                          {"Avec e-mail": s["presence_numerique"]["avec_email"], "Sans e-mail": s["presence_numerique"]["sans_email"],
                           "Avec site web": s["presence_numerique"]["avec_site_web"], "Sans site web": s["presence_numerique"]["sans_site_web"]})
     with c2:
-        _chart_from_dict("📋 Offres par type de contrat", s["offres_par_contrat"])
+        _chart_from_dict("Offres par type de contrat", s["offres_par_contrat"])
         statuts = {k: s["candidatures_par_statut"].get(k, 0) for k in STATUTS}
-        _chart_from_dict("📬 Candidatures par statut", statuts)
+        _chart_from_dict("Candidatures par statut", statuts)
 
 def page_profil():
-    st.markdown("# 🎯 Profil & Matching")
+    st.markdown("# Profil & Matching")
     st.markdown("Renseigne tes compétences pour voir les entreprises qui te correspondent le mieux.")
     profile = get_profile(st.session_state.user)
     with st.form("profile_form"):
@@ -629,7 +690,7 @@ def page_profil():
                             "bio": bio, "cv_filename": profile.get("cv_filename", "")})
             st.success("Profil enregistré ✅")
             st.rerun()
-    st.markdown("### 🤖 Entreprises recommandées")
+    st.markdown("### Entreprises recommandées")
     st.markdown("Indicatif : 60 % de compétences en commun avec les mots-clés de l'entreprise (surtout tirés de son nom), 40 % du score d'opportunité.")
     min_score = st.slider("Match minimum", 0, 100, 20, 5)
     df = get_opportunities_for_user(st.session_state.user)
@@ -651,15 +712,15 @@ def page_profil():
     st.caption(f"{len(df)} résultat(s), 40 affichés au maximum.")
     for _, o in df.head(10).iterrows():
         if (o.get("email") or "").strip():
-            if st.button(f"✉️ CV → {o['nom']}", key=f"matchcv_{o['id']}"):
+            if st.button(f"CV → {o['nom']}", key=f"matchcv_{o['id']}"):
                 send_cv_dialog(o.to_dict())
 
 def page_donnees():
-    st.markdown("# ⚙️ Collecte & Import")
+    st.markdown("# Collecte & Import")
     st.markdown("Alimente l'application en entreprises et en offres.")
     c1, c2 = st.columns(2)
     with c1:
-        st.subheader("🔄 Collecte Google Places")
+        st.subheader("Collecte Google Places")
         with st.form("collect_form"):
             query = st.text_input("Requête", value="Intelligence Artificielle OR Informatique")
             location = st.text_input("Coordonnées (lat,lng)", value="31.6295,-7.9811")
@@ -693,7 +754,7 @@ def page_donnees():
                         st.warning("\n".join(errors))
                     st.rerun()
 
-        st.subheader("📂 Importer des entreprises (Excel)")
+        st.subheader("Importer des entreprises (Excel)")
         st.caption("Colonnes : `entreprise` (obligatoire), type, secteur, adresse, lat, lon, note, site_web, telephone, `email`, statut_google.")
         f = st.file_uploader("Fichier .xlsx", type=["xlsx", "xls"], key="up_ent")
         only = st.checkbox("Garder uniquement Informatique / IA", value=True, key="only_it")
@@ -713,7 +774,7 @@ def page_donnees():
                 st.error(f"Erreur de lecture du fichier Excel : {e}")
 
     with c2:
-        st.subheader("📄 Importer des offres (Excel ou CSV)")
+        st.subheader("Importer des offres (Excel ou CSV)")
         st.caption("Colonnes reconnues : `titre` (obligatoire), entreprise, contrat, type de stage, ville, date de publication, lien, description.")
         fo = st.file_uploader("Fichier .xlsx ou .csv", type=["xlsx", "xls", "csv"], key="up_off")
         if fo is not None and st.button("Importer", key="btn_off"):
@@ -787,7 +848,7 @@ def page_donnees():
                         st.success("Import terminé ✅")
                         st.rerun()
 
-        st.subheader("➕ Ajouter une entreprise")
+        st.subheader("Ajouter une entreprise")
         with st.form("manual_form"):
             nom = st.text_input("Nom *")
             secteur = st.selectbox("Secteur", ["Détection automatique"] + SECTEURS, index=0)
@@ -814,7 +875,7 @@ def page_donnees():
                     except ValueError as e:
                         st.error(str(e))
 
-        st.subheader("📥 Exports")
+        st.subheader("Exports")
         st.caption("Tes données (favoris, candidatures) au format tableur.")
         opps = get_opportunities_for_user(st.session_state.user)
         conn = get_connection()
@@ -838,16 +899,16 @@ if not st.session_state.user:
     show_auth()
 else:
     with st.sidebar:
-        st.markdown('<div class="brand">🎯 Career Finder</div><span class="muted">Marrakech · IA &amp; IT</span>', unsafe_allow_html=True)
-        st.markdown(f"👤 **{st.session_state.user}** " + ("`admin`" if st.session_state.is_admin else ""))
-        nav = st.radio("Navigation", ["🏠 Accueil", "🏢 Entreprises", "📄 Offres", "🗺️ Carte", "📬 Candidatures",
-                                      "📊 Statistiques", "🎯 Profil & Matching", "⚙️ Collecte & Import"],
-                       label_visibility="collapsed", key="nav")
+        st.markdown('<div class="brand">Career Finder</div><div class="brand-sub">Marrakech · IA &amp; IT</div>', unsafe_allow_html=True)
+        st.markdown(f"**{st.session_state.user}** " + ("· admin" if st.session_state.is_admin else ""))
+        nav = st.selectbox("Navigation", ["Accueil", "Entreprises", "Offres", "Carte", "Candidatures",
+                                      "Statistiques", "Profil & Matching", "Collecte & Import"],
+                       key="nav")
         if st.button("Se déconnecter", use_container_width=True):
             st.session_state.user = None
             st.session_state.is_admin = False
             st.rerun()
-    page = nav.split(" ", 1)[1] if " " in nav else nav
+    page = nav
     if page == "Accueil":
         page_accueil()
     elif page == "Entreprises":
