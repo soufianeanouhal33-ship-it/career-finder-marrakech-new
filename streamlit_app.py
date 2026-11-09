@@ -361,16 +361,19 @@ def page_entreprises():
     filtered = filtered.sort_values("score_opportunite", ascending=False)
 
     st.markdown(f"{len(filtered)} entreprise(s) trouvée(s)")
-    # actions héroïdées en table compacte via dataframe + boutons par ligne (expander)
+    # table compacte via dataframe + boutons par ligne (expander)
     display = filtered.copy()
     display["favori"] = display["favori"].map({1: "★", 0: "☆"})
     display["cv"] = display.apply(lambda r: f"CV envoyé le {fmt_ts(r['cv_envoye_le'])}" if pd.notna(r.get("cv_envoye_le")) else "", axis=1)
     cols = ["favori", "nom", "secteur", "score_opportunite", "note", "telephone", "email", "site_web", "google_maps_url", "cv", "adresse"]
     safe = [c for c in cols if c in display.columns]
+    # LinkColumn doit recevoir des strings valides (pas de NaN/None) — on nettoie en string, vide si absent
+    for link_col in ("site_web", "google_maps_url"):
+        if link_col in display.columns:
+            display[link_col] = display[link_col].fillna("").astype(str)
+            display[link_col] = display[link_col].apply(lambda x: "" if x.strip().lower() in ("none", "nan", "") else x.strip())
     st.dataframe(display[safe], use_container_width=True, hide_index=True, column_config={
         "score_opportunite": st.column_config.ProgressColumn("Score", min_value=0, max_value=100),
-        "site_web": st.column_config.LinkColumn("Site", display="🌐 Site"),
-        "google_maps_url": st.column_config.LinkColumn("Maps", display="📍 Maps"),
     })
     # actions par ligne
     st.markdown("#### Actions")
@@ -619,7 +622,7 @@ def page_profil():
     profile = get_profile(st.session_state.user)
     with st.form("profile_form"):
         skills = st.text_area("Compétences (séparées par des virgules)", value=profile.get("skills", ""), placeholder="python, machine learning, data, cloud", height=80)
-        exp = st.number_input("Années d'expérience", min_value=0, max_value=50, step=0.5, value=float(profile.get("experience_years", 0) or 0))
+        exp = st.number_input("Années d'expérience", min_value=0.0, max_value=50.0, step=0.5, value=float(profile.get("experience_years", 0) or 0))
         bio = st.text_input("Courte présentation", value=profile.get("bio", ""), max_chars=500)
         if st.form_submit_button("💾 Enregistrer mon profil", type="primary"):
             upsert_profile({"user": st.session_state.user, "skills": skills, "experience_years": float(exp),
